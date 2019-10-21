@@ -2,6 +2,7 @@ package environment;
 
 import java.util.HashMap;
 import java.util.Map;
+import ast.*;
 
 /**
  * The environment class is used to keep track of all the variables and their respective values
@@ -9,7 +10,9 @@ import java.util.Map;
  * @version 10/8/19
  */
 public class Environment {
-	Map<String, Integer> vars;
+	private Map<String, Integer> vars;
+	private Map<String, ProcedureDeclaration> procedures;
+	private Environment parent;
 	
 	/**
 	 * instantiates the environment, creates the map that will store all the variables
@@ -17,6 +20,15 @@ public class Environment {
 	public Environment()
 	{
 		vars = new HashMap<String, Integer>();
+		procedures = new HashMap<String, ProcedureDeclaration>();
+		parent = null;
+	}
+	
+	public Environment(Environment parentEnv)
+	{
+		vars = new HashMap<String, Integer>();
+		procedures = new HashMap<String, ProcedureDeclaration>();
+		parent = parentEnv;
 	}
 	
 	/**
@@ -37,5 +49,15 @@ public class Environment {
 	public int getVariable(String variable)
 	{
 		return vars.get(variable);
+	}
+	
+	public void setProcedure(String procedure, ProcedureDeclaration declaration)
+	{
+		procedures.put(procedure, declaration);
+	}
+	
+	public ProcedureDeclaration getProcedure(String procedure)
+	{
+		return procedures.get(procedure);
 	}
 }

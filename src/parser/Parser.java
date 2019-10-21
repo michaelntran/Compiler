@@ -140,6 +140,10 @@ public class Parser {
 		else {
 			factor = new Variable(currentToken);
 			eat(currentToken);
+			if(currentToken.equals("("))
+			{
+				
+			}
 		}
 		return factor;
 	}

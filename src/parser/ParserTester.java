@@ -16,13 +16,14 @@ import scanner.ScanErrorException;
 public class ParserTester {
 	public static void main(String[] args) throws FileNotFoundException, ScanErrorException
 	{
-		FileInputStream inStream = new FileInputStream(new File("/Users/michael/eclipse-workspace/Compiler/src/ParserTest6.txt"));
+		String path = "/Users/michael/eclipse-workspace/Compiler/src/returnTest.txt";
+		FileInputStream inStream = new FileInputStream(new File(path));
 		Scanner sc = new Scanner(inStream);
 		Parser pa = new Parser(sc);
 		Environment env = new Environment();
 		while(sc.hasNext())
 		{
-			pa.parseStatement().exec(env);
+			pa.parseProgram().exec(env);
 		}
 	}
 }

@@ -32,6 +32,7 @@ public class Parser {
 	{
 		if(expected.equals(currentToken))
 		{
+			//System.out.println(currentToken);
 			currentToken = sc.nextToken();
 		}
 		else
@@ -53,6 +54,38 @@ public class Parser {
 		return num;
 	}
 	
+	public Program parseProgram()
+	{
+		List<ProcedureDeclaration> procedures = new ArrayList<ProcedureDeclaration>();
+		while(currentToken.equals("PROCEDURE"))
+		{
+			eat("PROCEDURE");
+			String procedureName = currentToken;
+			eat(currentToken);
+			eat("(");
+			List<String> paramNames = new ArrayList<String>();
+			if(!currentToken.equals(")"))
+			{
+				paramNames.add(currentToken);
+				eat(currentToken);
+			}
+			while(!currentToken.equals(")"))
+			{
+				eat(",");
+				paramNames.add(currentToken);
+				eat(currentToken);
+			}
+			eat(")");
+			eat(";");
+			Statement procedureStmt = parseStatement();
+			procedures.add(new ProcedureDeclaration(procedureName, procedureStmt, paramNames));
+		}
+		
+		Program program = new Program(procedures, parseStatement());
+		//eat(".");
+		return program;
+	}
+
 	/**
 	 * This method parses a statement using the eat method
 	 * @precondition current token is a statement
@@ -138,11 +171,27 @@ public class Parser {
 			factor = new Number(parseNumber());
 		}
 		else {
-			factor = new Variable(currentToken);
+			String id = currentToken;
 			eat(currentToken);
 			if(currentToken.equals("("))
 			{
-				
+				List<Expression> params = new ArrayList<Expression>();
+				eat("(");
+				if(!currentToken.equals(")"))
+				{
+					params.add(parseExpression());
+				}
+				while(!currentToken.equals(")"))
+				{
+					eat(",");
+					params.add(parseExpression());
+				}
+				eat(")");
+				//eat(";");
+				factor = new ProcedureCall(id, params);
+			}
+			else {
+				factor = new Variable(id);
 			}
 		}
 		return factor;

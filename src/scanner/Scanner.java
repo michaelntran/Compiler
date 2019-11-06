@@ -52,7 +52,7 @@ public class Scanner
     	try {
     		int character = in.read();
     		currentChar = (char) character;
-    		if(character == -1)
+    		if(character == -1 || currentChar == '.')
     			eof = true;
     	}
     	catch(IOException e)

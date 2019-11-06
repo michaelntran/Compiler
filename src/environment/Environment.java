@@ -38,7 +38,14 @@ public class Environment {
 	 */
 	public void setVariable(String variable, int value)
 	{
-		vars.put(variable, value);
+		if(vars.get(variable) != null)
+			vars.put(variable, value);
+		else if(hasVariable(variable))
+			parent.setVariable(variable, value);
+		else
+		{
+			declareVariable(variable, value);
+		}
 	}
 	
 	/**
@@ -48,16 +55,44 @@ public class Environment {
 	 */
 	public int getVariable(String variable)
 	{
-		return vars.get(variable);
+		if(vars.get(variable) != null)
+			return vars.get(variable);
+		if(hasVariable(variable))
+			return parent.getVariable(variable);
+		else
+		{
+			declareVariable(variable, 0);
+			return 0;
+		}
+	}
+	
+	public void declareVariable(String variable, int value)
+	{
+		vars.put(variable, value);
+	}
+	
+	public boolean hasVariable(String variable)
+	{
+		if(vars.get(variable) != null)
+			return true;
+		if(parent == null)
+			return false;
+		return parent.hasVariable(variable);
 	}
 	
 	public void setProcedure(String procedure, ProcedureDeclaration declaration)
 	{
-		procedures.put(procedure, declaration);
+		if(parent == null)
+			procedures.put(procedure, declaration);
+		else
+			parent.setProcedure(procedure, declaration);
 	}
 	
 	public ProcedureDeclaration getProcedure(String procedure)
 	{
-		return procedures.get(procedure);
+		if(parent == null)
+			return procedures.get(procedure);
+		else
+			return parent.getProcedure(procedure);
 	}
 }

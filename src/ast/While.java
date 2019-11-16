@@ -1,5 +1,6 @@
 package ast;
 
+import emitter.Emitter;
 import environment.Environment;
 
 /**
@@ -31,4 +32,14 @@ public class While extends Statement {
 			stmt.exec(env);
 	}
 
+	public void compile(Emitter e)
+	{
+		String whileLabel = "while" + e.nextLabelID();
+		String endLabel = "endif" + e.nextLabelID();
+		e.emit(whileLabel + ":");
+		cond.compile(e, endLabel);
+		stmt.compile(e);
+		e.emit("j " + whileLabel);
+		e.emit(endLabel + ":");
+	}
 }

@@ -1,5 +1,6 @@
 package ast;
 import environment.*;
+import emitter.Emitter;
 
 /**
  * The BinOp class is used as an expression that is a combination of two expressions
@@ -41,5 +42,32 @@ public class BinOp extends Expression{
 			return exp1.eval(env) / exp2.eval(env);
 		else
 			return exp1.eval(env) % exp2.eval(env);
+	}
+	
+	public void compile(Emitter e)
+	{
+		exp1.compile(e);
+		e.emitPush("$v0");
+		exp2.compile(e);
+		e.emitPop("$t0");
+		if(op.equals("+"))
+			e.emit("addu $v0 $t0 $v0");
+		else if(op.equals("-"))
+			e.emit("subu $v0 $t0 $v0");
+		else if(op.equals("*"))
+		{
+			e.emit("mult $v0 $t0");
+			e.emit("mflo $v0");
+		}
+		else if(op.equals("/"))
+		{
+			e.emit("div $t0 $v0");
+			e.emit("mflo $v0");
+		}
+		else
+		{
+			e.emit("div $t0 $v0");
+			e.emit("mfhi $v0");
+		}
 	}
 }

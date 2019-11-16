@@ -1,5 +1,6 @@
 package ast;
 import environment.*;
+import emitter.Emitter;
 
 /**
  * The Condition class respresents a condition used for if and while statements
@@ -69,6 +70,37 @@ public class Condition extends Expression{
 			if(exp1.eval(env) >= exp2.eval(env))
 				return 1;
 			return 0;
+		}
+	}
+	
+	public void compile(Emitter e, String label)
+	{
+		exp1.compile(e);
+		e.emit("move $t0 $v0");
+		exp2.compile(e);
+		if(op.getOp().equals("=="))
+		{
+			e.emit("bne $t0 $v0 " + label);
+		}
+		else if(op.getOp().equals("<>"))
+		{
+			e.emit("beq $t0 $v0 " + label);
+		}
+		else if(op.getOp().equals("<"))
+		{
+			e.emit("bge $t0 $v0 " + label);
+		}
+		else if(op.getOp().equals(">"))
+		{
+			e.emit("ble $t0 $v0 " + label);
+		}
+		else if(op.getOp().equals("<="))
+		{
+			e.emit("bgt $t0 $v0 " + label);
+		}
+		else // op.getOp().equals(">=")
+		{
+			e.emit("blt $t0 $v0 " + label);
 		}
 	}
 }

@@ -56,6 +56,20 @@ public class Parser {
 	
 	public Program parseProgram()
 	{
+		List<String> vars = new ArrayList<String>();
+		while(currentToken.equals("VAR"))
+		{
+			eat("VAR");
+			vars.add(currentToken); // currentToken is the var name
+			eat(currentToken);
+			while(currentToken.equals(","))
+			{
+				eat(",");
+				vars.add(currentToken); // currentToken is the var name
+				eat(currentToken);
+			}
+			eat(";");
+		}
 		List<ProcedureDeclaration> procedures = new ArrayList<ProcedureDeclaration>();
 		while(currentToken.equals("PROCEDURE"))
 		{
@@ -81,7 +95,7 @@ public class Parser {
 			procedures.add(new ProcedureDeclaration(procedureName, procedureStmt, paramNames));
 		}
 		
-		Program program = new Program(procedures, parseStatement());
+		Program program = new Program(vars, procedures, parseStatement());
 		//eat(".");
 		return program;
 	}

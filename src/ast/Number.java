@@ -1,4 +1,5 @@
 package ast;
+import emitter.Emitter;
 import environment.*;
 
 /**
@@ -26,5 +27,15 @@ public class Number extends Expression{
 	public int eval(Environment env)
 	{
 		return value;
+	}
+	
+	/**
+	 * emits the assembly code for assigning the value of the number to $v0
+	 * to the given emitter
+	 * @param e is the given emitter
+	 */
+	public void compile(Emitter e)
+	{
+		e.emit("li $v0 " + value);
 	}
 }

@@ -64,5 +64,9 @@ public class Relop extends Expression {
 			return 5;
 		}
 	}
-
+	
+	public String getOp()
+	{
+		return op;
+	}
 }

@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import scanner.*;
 import environment.*;
+import emitter.Emitter;
+import ast.*;
 
 import scanner.ScanErrorException;
 
@@ -16,14 +18,18 @@ import scanner.ScanErrorException;
 public class ParserTester {
 	public static void main(String[] args) throws FileNotFoundException, ScanErrorException
 	{
-		String path = "/Users/michael/eclipse-workspace/Compiler/src/returnTest.txt";
+		String path = "/Users/michael/eclipse-workspace/Compiler/src/emitterTest.txt";
 		FileInputStream inStream = new FileInputStream(new File(path));
 		Scanner sc = new Scanner(inStream);
 		Parser pa = new Parser(sc);
 		Environment env = new Environment();
+		Emitter e = new Emitter("output.txt");
 		while(sc.hasNext())
 		{
-			pa.parseProgram().exec(env);
+			Statement s = pa.parseProgram();
+			s.exec(env);
+			//System.out.println(s);
+			s.compile(e);
 		}
 	}
 }

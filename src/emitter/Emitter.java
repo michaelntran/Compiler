@@ -4,6 +4,7 @@ import java.io.*;
 public class Emitter
 {
 	private PrintWriter out;
+	private int labelNum = 0;
 
 	//creates an emitter for writing to a new file with given name
 	public Emitter(String outputFileName)
@@ -30,5 +31,23 @@ public class Emitter
 	public void close()
 	{
 		out.close();
+	}
+	
+	public void emitPush(String reg)
+	{
+		emit("subu $sp $sp 4");
+		emit("sw " + reg + " ($sp)");
+	}
+	
+	public void emitPop(String reg)
+	{
+		emit("lw " + reg + " ($sp)");
+		emit("addu $sp $sp 4");
+	}
+	
+	public int nextLabelID()
+	{
+		labelNum++;
+		return labelNum;
 	}
 }

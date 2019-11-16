@@ -1,5 +1,6 @@
 package ast;
 import environment.*;
+import emitter.Emitter;
 
 /**
  * The Writeln class is used for printing/outputting to the console
@@ -24,5 +25,16 @@ public class Writeln extends Statement{
 	public void exec(Environment env)
 	{
 		System.out.println(exp.eval(env));
+	}
+	@Override
+	public void compile(Emitter e)
+	{
+		exp.compile(e);
+		e.emit("move $a0, $v0");
+		e.emit("li $v0, 1");
+		e.emit("syscall");
+		e.emit("li $v0, 4");
+		e.emit("la $a0, varNewLine");
+		e.emit("syscall");
 	}
 }

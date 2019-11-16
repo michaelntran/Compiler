@@ -1,4 +1,5 @@
 package ast;
+import emitter.Emitter;
 import environment.*;
 
 /**
@@ -28,5 +29,13 @@ public class If extends Statement{
 	{
 		if(cond.eval(env) == 1)
 			stmt.exec(env);
+	}
+	
+	public void compile(Emitter e)
+	{
+		String label = "endif" + e.nextLabelID();
+		cond.compile(e, label);
+		stmt.compile(e);
+		e.emit(label + ":");
 	}
 }
